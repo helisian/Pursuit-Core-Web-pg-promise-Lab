@@ -20,7 +20,7 @@ router.get('/all', async (req, res) => {
     };
 });
 
-router.get('/:user_id', (req, res) => {
+router.get('/:user_id', async (req, res) => {
   try {
     let data = await db.any(`SELECT * FROM posts WHERE poster_id = ${req.params.user_id}`)
     res.status(200).json({
@@ -31,9 +31,9 @@ router.get('/:user_id', (req, res) => {
     };
 });
 
-router.post('/register/:user_id', (req, res) => {
+router.post('/register/:user_id', async (req, res) => {
   try {
-    let data = await db.none('INSERT INTO posts(poster_id, body) VALUES($1, $2)', [req.params.id, req.body[body]])
+    let data = await db.none('INSERT INTO posts(poster_id, body) VALUES($1, $2)', [req.params.user_id, req.body.body])
     res.status(200).json({
       message: "Post Created"
     }) 
@@ -42,3 +42,4 @@ router.post('/register/:user_id', (req, res) => {
     };
 });
 
+module.exports = router

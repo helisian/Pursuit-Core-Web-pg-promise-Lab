@@ -1,10 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
-    loadUsers();
-    const form = document.querySelector('#addUserForm');
-    form.addEventListener('submit', addUserFormSubmitted);
-});
 
-async function loadUsers() {
+
+const loadUsers = async () => {
     const usersList = document.querySelector('#usersList');
     usersList.innerHTML = "";
     const response = await axios.get(`http://localhost:3000/users/all`);
@@ -14,8 +10,22 @@ async function loadUsers() {
         usersList.appendChild(listItem);
     });
 }
+loadUsers()
 
-async function addUserFormSubmitted(event) {
+const loadPosts = async () => {
+    const postsList = document.querySelector('#postsList');
+    postsList.innerHTML = "";
+    const response = await axios.get(`http://localhost:3000/posts/all`);
+    response.data.posts.forEach((posts) => {
+        let listItem = document.createElement("li");
+        listItem.innerText = `${posts.poster_id}, ${posts.body}`;
+        postsList.appendChild(listItem);
+    });
+}
+loadPosts()
+
+
+const addUserFormSubmitted = async (event) =>  {
     event.preventDefault();    
     const firstname = document.querySelector('#firstNameInput').value;
     const lastname = document.querySelector('#lastNameInput').value;
@@ -23,3 +33,19 @@ async function addUserFormSubmitted(event) {
     let response = await axios.post(`http://localhost:3000/users/register`, { firstname, lastname, age });
     loadUsers();
 }
+
+let userForm = document.querySelector('#addUserForm');
+userForm.addEventListener('submit', addUserFormSubmitted);
+
+let postForm = document.querySelector('#addPostForm');
+
+const addPostFormSubmitted = async (event) =>  {
+    event.preventDefault();    
+    const posterId = document.querySelector('#poster_id').value;
+    const body = document.querySelector('#post').value;
+    let response = await axios.post(`http://localhost:3000/posts/register/${posterId}`, {body});
+    postForm.reset()
+    loadPosts();
+}
+
+postForm.addEventListener('submit', addPostFormSubmitted);

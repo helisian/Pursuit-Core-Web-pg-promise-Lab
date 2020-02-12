@@ -19,6 +19,13 @@ CREATE TABLE posts(
     body VARCHAR
 );
 
+CREATE TABLE likes (
+    id SERIAL PRIMARY KEY,
+    post_id INT REFERENCES posts(id) ON DELETE CASCADE,
+    liker_id INT REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 INSERT INTO users(firstname, lastname, age)
     VALUES('Adam', 'Addams', 40),
           ('Beth', 'Brown', 51),
@@ -37,6 +44,12 @@ INSERT INTO posts (poster_id, body)
           (5, 'I am Eve! Welcome!'),
           (5, 'I like turtles'),
           (5, 'My favorite number is 8');
+
+INSERT INTO likes (liker_id, post_id)
+    VALUES(1, 3),
+            (1,4),
+            (2,5),
+            (3,6);
 
 SELECT * FROM users;
 SELECT * FROM posts;
